@@ -5,11 +5,7 @@ mongoose.connect('mongodb://localhost:27017/interview',{autoIndex:true})
 
 const cors = require('cors')
 const app = express();
-// var corsoption={
-//     origin:'http://localhost:3000',
-    
-// }
-// app.use(cors(corsoption))
+/
 global.xsession= session({
 resave:false,
 saveUninitialized:false,
@@ -30,7 +26,7 @@ app.use(require("./main/interview"))
 app.use(require("./main/settings"))
 app.use(require("./main/employer"))
 app.use(require("./main/candidate_public"))
-app.get("/error",(req,res)=>{
+app.get("*",(req,res)=>{
     res.redirect("/home")
 })
 
