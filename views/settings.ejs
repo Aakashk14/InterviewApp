@@ -1,0 +1,47 @@
+<html>
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/settings.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <script src="/header.js"></script>
+
+<Script>
+    
+    $(()=>{
+        $(".header").load("/header.html")
+        $(".container :button").on("click",function(){
+            let id = $(this).attr('id')
+
+            src=`/${id}/settings`
+            var frame = $('#frm')[0];
+            frame.contentWindow.location.replace(src)
+            //$("#frm").attr("src",src)       
+
+        })
+    })
+</Script>
+    <body>
+        
+        <div class="header">
+            
+        </div>
+        <div class="main">
+            
+            <iframe id="frm" frameBorder="0" src="/emp/settings"></iframe>
+
+        <div class="panel">
+        <div class="container">
+         <input type="button"  id="emp" value="Employers Settings">
+         <input type="button" id="profile" value="My Profile">
+        <!-- <input type="button"  id="interview" value="Total Interviews"> -->
+         <input type="button"id="departments" value="Departments">
+         </div>
+         </div>
+         
+         
+    </body>
+</html>

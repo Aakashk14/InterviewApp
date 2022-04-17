@@ -1,0 +1,96 @@
+<Html>
+   <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/dep.css">
+    
+
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="/static/header.js"></script>
+
+
+<style>
+    .container{
+        background-color: rgb(245, 245, 245);
+        height: 500px;
+        width: 650px;
+        position: relative;
+        left:30%;
+        top:20%;
+    }
+    .container input[type=text]{
+        width: 350px;
+        height: 50px;
+        margin:10px;
+        border-radius: 4px;
+        position: relative;
+        top:100px;
+        font-size: larger;
+    }
+    .container #note{
+        position: relative;
+        left:15px;
+        top:70px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+    .container #nxt{
+        position: relative;
+        top:200px;
+        right:250px;
+        display: inline-block;
+        width: 100px;
+        height: 40px;
+        margin: 10px;
+        background-color: rgb(236, 236, 236);
+        border-radius: 4px;
+    }
+</style>
+<script>
+    $(()=>{
+        $(".header").load("/static/header.html")
+        $("#o_btn").on("click",()=>{
+            if($(".frm").css("display")=="block"){
+                 $(".frm").hide()
+            }else{
+                $(".frm").show()
+            }
+
+            
+        })
+        $("#nxt").on("click",()=>{
+            $(".i_form").hide();
+            $(".ii_form").show()
+        })
+    })
+        
+</script>
+    <body>
+        
+        <div class="header">
+            
+        </div>
+        <div class="container">
+            <form method="POST" action="/org/new">
+            <div class="i_form">
+          <p id="note">Create Your Org Portal</p>
+            <input type="text" placeholder="Org Name" name="org">
+            <input type="button" id="nxt" value="Next">
+            </div>
+            <div class="ii_form" style="display: none;">
+                <p id="note">Add Employers or Skip,use commas to add Multiples</p>
+            <input type="text" placeholder="Employer1 email,Employer2 email" name="email">
+            <input type="submit" id="nxt" value="Finish" >
+            <input type="submit" id="nxt" value="Skip" >
+            </div>
+            </form>
+        </div>
+        </body>
+        </Html>
+        
+    
+
+     
+ 

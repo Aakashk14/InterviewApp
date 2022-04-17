@@ -1,0 +1,28 @@
+
+.profile{
+    position: absolute;
+    right:1px;
+    top:40px;
+    width: 1260px;
+    overflow-x: hidden;
+}
+.profile input{
+    display: block;
+    margin: 20px;
+    width: 300px;
+    height: 40px;
+
+}
+.pic{
+    position: relative;
+    left:600px;
+    bottom:230px;
+}
+.pic input{
+    width: 110px;
+    position: relative;
+    left:100px;
+    margin: 20px;
+    height: 30px;
+    top:40px;
+}

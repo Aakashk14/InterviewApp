@@ -1,0 +1,30 @@
+*{
+    margin:0;
+}
+body{
+    background-color: rgb(245, 245, 245);
+}
+
+.header{
+    position: sticky;
+    background-color: rgb(13, 163, 156);
+    height: 60px;
+    z-index: 2;
+    
+}
+.header p {
+    display: inline-block;
+    margin: 10px;
+    color: rgba(255, 255, 255, 0.815);
+    cursor: pointer;
+
+
+}
+.header p:hover{
+    text-decoration: underline;
+}
+
+.new_Frm{
+    background-color: red;
+    width: 400px;
+}

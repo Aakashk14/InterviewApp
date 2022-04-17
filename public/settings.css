@@ -1,0 +1,98 @@
+.panel{
+    background-color: rgb(113, 143, 170);
+    height: 702px;
+    width: 240px;
+    position: relative;
+    bottom:700px;    
+    background-color: #605fa75d;
+}
+
+.container input[type=button]{
+    display: block;
+    margin: 20px;
+    width: 200px;
+    height: 40px;
+    position: relative;
+    top:60px;
+}
+
+.opn_users{
+    position: relative;
+    width: 1216px;
+    left:301px;
+    bottom:718px;
+    height: 699px;
+}
+.main{
+    height: 92%;
+}
+
+.opn_users select{
+    width: 600px;
+    position: relative;
+    left:300px;
+    height: 60px;
+}
+
+.section{
+    background-color: rgb(151, 138, 138);
+
+    margin: 10px;
+}
+.users{
+    height: auto
+}
+.users p{
+    position: relative;
+    left:800px;
+    bottom:10px;
+    
+}
+
+.section #dept_name{
+    background-color: blue;
+    width: 400px;
+    height: 60px;
+}
+
+#tb_main{
+    position: absolute;
+    left:60px;
+    top:15%;
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 45%;
+    background-color: white;
+    border-radius: 10px;
+
+  /*  background-color: rgba(224, 233, 223, 0.87); */
+
+
+}
+#tb_main td,#tb_main th{
+    border: 1px solid #ddd;
+    padding: 40px;
+    word-wrap: break-word;
+
+
+}
+
+#tb_main th{
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: hwb(187 4% 19% / 0.856);
+    color:black;
+}
+#tb_main td{
+    max-width: 100px;
+    overflow-x: hidden;
+    font-family: Arov;
+}
+
+#frm{
+    position: relative;
+    left:250px;
+    width: 1260px;
+    height: 680px;
+}

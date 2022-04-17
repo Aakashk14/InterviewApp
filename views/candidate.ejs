@@ -1,0 +1,113 @@
+<html>
+    <link rel="stylesheet" href="/static/header.css">
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+       
+        .box{
+            position: relative;
+            width: 500px;
+            top:50px;
+            right:300px;
+            height: 400px;
+        }
+        
+        .outer{
+            position: relative;
+            top:50px;
+            height: 130px;
+        }
+        .message{
+            height: 130px;
+            width: 300px;
+            position: relative;
+            right:80px;
+        }
+        .btn{
+            position: relative;
+            top:140px;
+            left:100px;
+        }
+        #note{
+            text-align: center;
+        }
+        .heading{
+            background-color:rgb(179, 172, 172) ;
+        }
+
+    </style>
+    <script>
+        $(()=>{
+            $("#link").on("click",()=>{
+                Swal.fire({
+                    title:"Enter New Email",
+                    input:"text"
+                }).then((value)=>{
+                    if(value.value.indexOf("@")==-1){
+                        swal.fire("Enter correct email")
+                    }else{
+                    $.get(`/pvt/update?email=${value}`,function(response){
+                        Swal.fire("Your Request has been submitted")
+                    })
+                }
+            })
+        })
+    })
+    </script>
+    <body>
+        <div class="header">
+            
+            <p>About</p>
+            <p> Welcome CANDIDATE <%=result[0].Name %></p>
+        </div>
+        <div class="main">
+        <p class="font-weight-bold" id="note">Here You will get Your Job Application Updates</p>
+
+        <div class="box container border">
+            <div class="row border">
+                <div class=" heading col col-md-3 border">Candidate</div>
+                <div class="col col-md-8"><%=result[0].Name %></div>
+
+            </div>  
+            <div class="row border">
+                <div class="heading col col-md-3 border">Applied_for</div>
+                <div class="col col-md-8">Sde</div>
+
+            </div>  
+            <div class="row border">
+                <div class=" heading col col-md-3 border ">Status</div>
+                <div class="col col-md-8"><%=result[0].Status %></div>
+
+            </div> 
+           
+            <div class="outer container">
+                <h5>Messages</h5>
+               
+                <div class="message container border">
+                    <% if(result[0].Message.length >0) { %>
+                        <% for(let i=0;i<result[0].Message.length;i++) {%> 
+                            <p><%=result[0].Message[i]%></p>
+                      <%  } %>
+                    <%}else{%>
+                    <p id="default">No Message</p>
+                    <% } %>
+                   
+                </div>
+                
+               </div>
+               
+            
+
+        
+        </div>
+          
+           
+    </body>
+</html>

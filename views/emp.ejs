@@ -1,0 +1,283 @@
+<html>
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/static/header.js"></script>
+
+
+    <style>
+        body{
+            overflow: hidden;
+        }
+        #emp_add{
+            width: 130px;
+            height: 40px;
+            position: relative;
+            left:1000px;
+        }
+        .opn_users{
+            height: 662px;
+        }
+        .opn_users select{
+    width: 400px;
+    position: relative;
+    left:100px;
+    height: 40px;
+    top:20px;
+}
+
+.section{
+    background-color: rgb(151, 138, 138);
+
+    margin: 10px;
+}
+.users{
+    height: auto
+}
+.users p{
+    position: relative;
+    left:800px;
+    bottom:10px;
+    
+}
+
+.section #dept_name{
+    background-color: blue;
+    width: 400px;
+    height: 60px;
+}
+
+#tb_main{
+    position: absolute;
+    left:20px;
+    top:16%;
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 45%;
+    background-color: white;
+    border-radius: 10px;
+
+  /*  background-color: rgba(224, 233, 223, 0.87); */
+
+
+}
+#tb_main td,#tb_main th{
+    border: 1px solid #ddd;
+    padding: 40px;
+    word-wrap: break-word;
+
+
+}
+
+#tb_main th{
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: hwb(187 4% 19% / 0.856);
+    color:black;
+}
+#tb_main td{
+    max-width: 100px;
+    overflow-x: hidden;
+    font-family: Arov;
+}
+.add{
+    width: 600px;
+    height: 300px;
+    display: block;
+    position: relative;
+    left:60px;
+    z-index: 2;
+    background-color: rgb(226, 226, 236);
+    top:30px;
+}
+#email_emp{
+    position: relative;
+    top:100px;
+    left:100px;
+    width: 400px;
+    height: 40px;
+
+}
+#submit1{
+    position: relative;
+    top:171px;
+    right:270px;
+    height: 40px;
+    width: 140px;
+}
+#btn_cancel{
+    position: relative;
+    width: 140px;
+    left:340px;
+    top:130px;
+    height: 40px;
+    
+
+}
+.add select{
+    position: relative;
+    right:1500px;
+    outline: none;
+    top:50px;
+}
+#new_c{
+    background-color: rgb(196, 201, 196);
+    height: 300px;
+}
+#emp_ad{
+    position: relative;
+    left:900px;
+    width: 150px;
+    height: 50px;
+    box-shadow: 0 3px 10px rgb(0 0 0/0.2);
+}
+.main{
+    position: absolute;
+    top:40px;
+}
+.main .list{
+position: relative;
+top:55px;
+}
+
+.hide{
+    display: none;
+}
+</style>
+    </style>
+    <script>
+        $(()=>{
+            $("#btn_cancel").on("click",()=>{
+                $(".add").hide()
+            })
+            $("#emp_ad").on("click",()=>{
+            if($(".add")[0]){
+              if($(".add").css("display")=="none"){
+                $(".add").show()
+              }else{
+                  $(".add").hide()
+              }
+            }else{
+                alert("Add a department first")
+            }
+      
+       
+    })
+    $("#submit1").on("click",()=>{
+        $("#submit1").attr("disabled","true");
+        $("#emp_add").attr("disabled","true")
+        
+        dept = $("select#select_dep").val()
+        email=$("#email_emp").val()
+
+
+        $.get(`/emp/add?department=${dept}&email=${email}`,function(response){
+            if(response!="ERROR"){
+                
+        location.reload()
+
+            }
+        })
+        
+    })
+    $("#filter_department").on("change",function(){
+        if($(this).val()!="default"){
+            
+        filter = $(this).val()
+
+        $("#tb_main tr:has(td)").each(function(){
+            if($(this).children()[3].innerHTML!=filter){
+                $(this).attr("class","hide")
+            }else{
+                $(this).removeClass("hide")
+            
+            }
+        })
+      
+        }else{
+            $("tr").removeClass("hide")
+        }
+    })
+})
+    </script>
+<body>
+<div class="opn_users">
+    <% if(emp!=0) { %>
+        <% if( emp[0].departments.length >0){ %>
+    <div class="add" style="display: none;">
+        <form id="new_c">
+
+
+            <select id="select_dep">
+            <% for(let i=0;i<emp[0].departments.length;i++){ %>
+                    <option value="<%=emp[0].departments[i].Name %>"><%=emp[0].departments[i].Name %></option>
+            <% } %>
+                </select>
+            <input type="text" id="email_emp" placeholder="Email" required>
+            <input type="submit" id="submit1" value="Add">
+            <input type="button" id="btn_cancel" value="Cancel">
+
+        </form>
+        </div>
+        <% } %>
+    <% }%>
+    
+        <div class="main">
+    <input type="button" value="Add Employers"  id="emp_ad">
+    
+        <p id="note" style="display: none;">Add Some Employers</p>
+        
+    <select id="filter_department"name="departments">
+        <option value="default">All departments</option>
+
+        <% if(emp!=0){ %>
+        <% if(emp[0].departments.length>0) {%>
+            <% for(let i=0;i<emp[0].departments.length;i++) {%>
+            <option value="<%=emp[0].departments[i].Name %>"><%=emp[0].departments[i].Name %></option>
+            <% } %>
+        <% }%>
+
+    </select>
+    <div class="list">
+    
+       <table id="tb_main">
+        
+           <tr>
+           <th>Name</th>
+           <th>Email</th>
+           <th>Status</th>
+           <th>Department</th>
+           <th>One Time Password</th>
+           </tr>
+           
+       <% for(let k=0;k<emp[0].departments.length;k++) {%>
+           <% for(let i=0;i<emp[0].departments[k].Employers.length;i++){ %>
+               <tr>
+               <td>____</td>
+               <td><%= emp[0].departments[k].Employers[i].email %> </td>
+               <% if(emp[0].departments[k].Employers[i].Status==false){ %>
+               <td>Inactive</td>
+       <%}else{ %>
+        <td>Active</td>
+       <%} %>
+            <td id="d_belong"><%= emp[0].departments[k].Name %></td>  
+           <td><%= emp[0].departments[k].Employers[i].otp %> </td>
+                  </tr>
+               
+           <% } %>
+           <% } %>
+           
+           </table>
+
+      
+    </div>
+<% } %>
+    </div>
+</div>
+    
+
+</body>
+</html>

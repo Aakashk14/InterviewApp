@@ -1,0 +1,45 @@
+<html>
+    <link rel="stylesheet" href="/header.css">
+    <link rel="stylesheet" href="/settings.css">
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+<Script>
+    
+    $(()=>{
+        $(".container :button").on("click",function(){
+            let id = $(this).attr('id')
+
+            src=`/${id}/settings`
+            $("#frm").attr("src",src)       
+
+        })
+    })
+</Script>
+    <body>
+        
+        <div class="header">
+            <p>About</p>
+            <p>Home</p>
+            <p>Message</p>
+    
+            <p id="control" active="true">Settings</p>
+            <p id="control">My Profile</p>
+        </div>
+        <div class="main">
+            
+            <iframe id="frm" frameBorder="0" src="/emp/settings"></iframe>
+
+        <div class="panel">
+        <div class="container">
+         <input type="button"  id="emp" value="Employers Settings">
+         <input type="button" id="profile" value="My Profile">
+         <input type="button"  id="interview" value="Total Interviews">
+         <input type="button"id="departments" value="Departments">
+         </div>
+         </div>
+         
+         
+    </body>
+</html>

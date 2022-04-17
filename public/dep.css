@@ -1,0 +1,167 @@
+.interview{
+    position: relative;
+    bottom:550px;
+    width: 1000px;
+    left:3%;
+    height: 550px;
+}
+#tb_main{
+    position: absolute;
+    left:60px;
+    top:10%;
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 45%;
+    background-color: white;
+    border-radius: 10px;
+
+  /*  background-color: rgba(224, 233, 223, 0.87); */
+
+
+}
+#tb_main td,#tb_main th{
+    border: 1px solid #ddd;
+    padding: 15px;
+    word-wrap: break-word;
+
+
+}
+
+#tb_main th{
+    padding-top: 12px;
+    padding-bottom: 10px;
+    text-align: left;
+    background-color: hwb(187 4% 19% / 0.856);
+    color:black;
+}
+#tb_main td{
+    max-width: 200px;
+    overflow-x: hidden;
+    font-family: Arov;
+}
+
+
+.new input{
+    width: 150px;
+    height: 50px;
+    border-radius: 10px;
+    position: absolute;
+    left:80%;
+    top:10px;
+    box-shadow: 0 3px 10px rgb(0 0 0/0.2);
+
+    
+
+}
+.new{
+    width: 550px;
+    position: relative;
+    left:55%;
+    top:10px;
+    height: 600px;
+    border-radius: 4px;
+}
+
+.frm{
+    background-color: rgb(226, 226, 236);
+    box-shadow: 0 3px 10px rgb(0 0 0/0.2);
+    z-index: 2;
+    width: 550px;
+    position: relative;
+    right:2%;
+    top:100px;
+    height: 530px;
+    border-radius: 4px;
+}
+
+#new_c{
+    position: relative;
+    right:430px;
+    top:10px;
+    
+}
+#new_c input{
+    position: relative;
+    width: 500px;
+    display: inline-block;
+    margin: 20px;
+}
+#new_c textarea{
+    position: relative;
+    left:80%;
+    border-radius: 6px;
+    resize: none;
+    margin: 20px;
+
+}
+#new_c input[type=button]{
+    width: 100px;
+}
+
+.msg{
+    position: absolute;
+    background-color: rgb(196, 197, 209);
+    top:10%;
+    left:40%;
+    width: 650px;
+    height: 400px;
+    z-index: 2;
+    border: 4px solid rgb(36, 34, 34);
+    border-radius: 6px;
+}
+#link{
+    position: relative;
+    width: 630px;
+    height: 60px;
+    top:23px;
+    margin:10px;
+}
+#msg_to{
+    position: absolute;
+    top:130px;
+    left:70px;
+    border-radius: 10px;
+    resize: none;
+}
+
+#btn1,#btn2{
+    position: relative;
+    background-color: rgb(203, 203, 235);
+    top:230px;
+    left:20%;
+    width: 100px;
+    height: 40px;
+}
+label{
+    position: relative;
+    top:10px;
+    left:10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+#name{
+    width: 100px;
+}
+.main_{
+    height: 92%;
+}
+
+#note{
+    position: relative;
+    left:50%;
+    top:30%;
+}
+
+#select_status{
+    height: 40px;
+    width: 100px;
+}
+
+.functions{
+    position: relative;
+    left:100px;
+    height: 50px;
+}
+.functions #delete_c{
+    height: 40px;
+    border-radius: 5px;
+}

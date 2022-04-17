@@ -1,0 +1,71 @@
+<html>
+    <link rel="stylesheet" href="/static/header.css">
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/org.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/static/header.js"></script>
+
+
+<script>
+    function me(){
+        Swal.fire("Aakash <br>Backend Engineer with Average Frontnend.<br>Expertise in Product Security")
+    }
+    $(()=>{
+        $(".header").load("/static/header.html")
+       
+    
+        $("#dept_btn").on("click",(req,res)=>{
+            Swal.fire({
+                title:'Enter Department Name',
+                input:'text',
+                showCancelButton:true,
+                showLoaderOnConfirm:true
+            }).then((value)=>{
+                let data={}
+                data.value= value.value[0].toUpperCase()+value.value.substring(1);
+              
+                $.ajax({
+                    type:"POST",
+                    url:"/department/add",
+                    data:data,
+                    success:function(response){
+                        if(response=="ERROR"){
+                            Swal.fire("Department Name invalid or already exist")
+                        }
+                        // should reload as we allow some fields to be empty so 
+                        location.reload()
+                        // let b=document.createElement("input");
+                        // b.setAttribute("type","button")
+                        // b.setAttribute("onclick",`location.href='/department/${data}`)
+                        // b.value=response;
+                        // document.getElementsByClassName("container")[0].appendChild(b)
+                    }
+                })
+            })
+        })
+    })
+</script>
+</style>
+    <body>
+        <div class="header">
+           
+        </div>
+        
+        <div class="update">
+           <!-- <a href="/qupdate">Need A quick Update Report?</a>-->
+            <input type="button" value="Add Department" id="dept_btn">
+        </div>
+        
+        <div class="container">
+<% if(locals.result){ %>
+<% for(let i=0;i<result[0].departments.length;i++){ %>
+    <input type="button" value="<%= result[0].departments[i].Name %>" onclick="location.href='/department/<%= result[0].departments[i].Name %>'">
+<% } %>
+            
+        </div>
+    <% } %>
+    </body>
+</html>

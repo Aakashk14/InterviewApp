@@ -1,0 +1,59 @@
+<html>
+    <link rel="stylesheet" href="/profile.css">
+    <link rel="stylesheet" href="/header.css">
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(()=>{
+            $("#dp_btn").on("click",()=>{
+                $("#file").click()
+            })
+            $("#file").on("change",()=>{
+                let formdata=new FormData();
+                let f = document.getElementById("file").files[0]
+                formdata.append("file",f)
+                $.ajax({
+                    url:"/profile/dp",
+                    method:"POST",
+                    data:formdata,
+                    contentType:false,
+                    processData:false,
+                    success:function(response){
+                        if(response=="DONE"){
+                            location.reload()
+                        }else{
+                            Swal.fire("Something went wrong")
+                            location.reload()
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+    <body>
+        <div class="profile">
+<div class="abt">
+    <form method="POST" action="/profile/update">
+    <input type="text" name="name" value="<%=result[0].Name %>">
+    <input type="text" name="email " value="<%=result[0].email %>">
+    <input type="password" name="password" value="" placeholder="password">
+    <input type="submit" value="Update">
+    </form>
+    </div>
+    <div class="pic">
+       
+        <img width="360px" height="260px" src="/profile/image/profile.png">
+
+
+     
+
+        <input type="button" id="dp_btn"  value="Change">
+        <input type="file" id="file" name="dp" style="display: none;">
+    </div>
+    </div>
+
+</body>
+ </html>

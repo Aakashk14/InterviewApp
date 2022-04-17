@@ -1,0 +1,34 @@
+<html>
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/org.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <script src="/static/header.js"></script>
+
+<script>
+    $(()=>{
+        $(".header").load("/static/header_emp.html")
+        $("#dept_btn").on("click",(req,res)=>{
+          
+        })
+    })
+</script>
+</style>
+    <body>
+        <div class="header">
+           
+        </div>
+        
+        <div class="container">
+<% if(locals.result){ %>
+    <input type="button" value="<%= result[0].Name %>" onclick="location.href='/department/<%= result[0].Name %>'">
+<% } %>
+           
+        </div>
+    
+    </body>
+</html>
