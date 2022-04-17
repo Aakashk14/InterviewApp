@@ -5,7 +5,7 @@ mongoose.connect('mongodb://localhost:27017/interview',{autoIndex:true})
 
 const cors = require('cors')
 const app = express();
-/
+
 global.xsession= session({
 resave:false,
 saveUninitialized:false,
