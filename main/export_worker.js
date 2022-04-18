@@ -2,7 +2,6 @@
 
 const { workerData,parentPort, isMainThread} = require('worker_threads')
 const mongoose = require('mongoose')
-console.log("exporting")
 mongoose.connect('mongodb://localhost:27017/interview',{autoIndex:true})
 
 const interview_db = require("../database/queries/interviews")
@@ -11,7 +10,6 @@ const org = workerData
 var empty=0;
 
 interview_db.interviews_all(org).then((result)=>{
-    console.log("got result",result)
 
    
  let temp="Department,Name,email,Status,Applied Position \n"
@@ -42,7 +40,6 @@ fs.writeFile(`./Storage/Orgs/${org}/export.csv`,temp,(err)=>{
 
 parentPort.postMessage({status:'done'})
 }else{
-    console.log("am i here")
     parentPort.postMessage({status:'error'})
 }
 
