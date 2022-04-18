@@ -15,6 +15,48 @@
     }
     $(()=>{
         $(".header").load("/static/header.html")
+        $("#export").on("click",function(){
+
+$.get("/interviews/export",function(response){
+    console.log("whats response",response)
+
+    if(response.status=="error"){
+        alert("No Interviews to download")
+        return false;
+    }
+    window.open(location.hash+"/download/interviews/export.csv")
+
+    
+})
+})
+$("#del_org").on("click",(req,res)=>{
+            Swal.fire({
+  title: 'Do you want to Delete the Organization?',
+  showCancelButton: true,
+  confirmButtonText: 'YES',
+}).then((result) => {
+  /* Read more about isConfirmed, isDenied below */
+  if (result.isConfirmed) {
+      $(".overlays").css("display","none")
+      $(".loading").removeAttr("style")
+   
+    $.get("/Org/delete",function(response){
+        console.log(response)
+        if(response){
+            location.reload()
+        }else{
+            alert("No Permission")
+            $(".overlays").removeAttr("style")
+            (".loading").css("display","none")
+
+
+        }
+    })
+  } else if (result.isDenied) {
+    Swal.fire('Changes are not saved', '', 'info')
+  }
+})
+        })
        
     
         $("#dept_btn").on("click",(req,res)=>{
@@ -58,6 +100,12 @@
            <!-- <a href="/qupdate">Need A quick Update Report?</a>-->
             <input type="button" value="Add Department" id="dept_btn">
         </div>
+        <% if(level==1){ %>
+            <div class="sidebar">
+                <input type="button" id="export" value="Interviews Reports">
+               <input type="button" id="del_org" value="Delete Organization">
+            </div>
+        <% } %>
         
         <div class="container">
 <% if(locals.result){ %>
