@@ -1,6 +1,8 @@
 //@candidate
 
 const express = require('express');
+const {Worker, isMainThread, parentPort,workerData} = require("worker_threads");
+
 
 const router = express.Router()
 const multer = require('multer');
@@ -8,6 +10,7 @@ const candidate = require('../database/queries/Candidate');
 const interview_db = require("../database/queries/interviews")
 const {access_control} = require("../database/queries/employers/departments")
 const {Identity_fn} = require("../main/fn")
+
 
 
 
@@ -93,4 +96,31 @@ router.get("/candidates/comments/:dept",(req,res)=>{
     console.log(req.query)
 })
 
+router.get("/interviews/export",async(req,res,next)=>{
+    if(req.session.level==0){
+        next()
+    }else{
+
+       
+         const  workerone= new Worker('./main/export_worker.js',{workerData:req.session.org})
+          workerone.on('message',(data)=>{
+              console.log("gott",data)
+              res.send(data)
+          })
+              
+          workerone.on('exit',(code) => {
+            if(code != 0) 
+                console.error(`Worker stopped with exit code ${code}`)
+        })
+    
+}
+})
+router.get("/interviews/export",(req,res)=>{
+    res.send('ERROR')
+})
+router.get("/download/interviews/:file",(req,res)=>{
+    if(req.session.level==1){
+    res.sendFile(`./Storage/Orgs/${req.session.org}/export.csv`,{root:"./"})
+}
+})
 module.exports=router;
