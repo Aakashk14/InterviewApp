@@ -29,6 +29,24 @@
     position: relative;
     bottom:100px;
 }
+.sidebar{
+    width: 200px;
+    height: 200px;
+}
+.sidebar input{
+    margin: 1px;
+    width: 160px;
+    height: 40px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: rgb(156, 105, 10);
+    margin-top: 10px;
+    font-family:lato;
+}
+.sidebar input:hover{
+    height:50px;
+    cursor: pointer;
+}
 
 
 #dept_btn{
