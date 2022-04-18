@@ -98,13 +98,40 @@ function add_resume(candidate_identity,filename){
     })
 }
 
+function interviews_all(orgid){
+    return new Promise(resolve=>{
+        orgs.find({
+            org_id:orgid
+        }).populate({path:'departments.Interviews'}).then((res)=>{
+            console.log("sendingg",res[0].departments.length)
+            if(res[0].departments.length > 0){
+                console.log("sendingg hereee",res[0].departments)
+
+                resolve(res)
+            }else{
+                console.log(" NOTTT sendingg hereee",res[0].departments)
+
+                resolve(0)
+            }
+        
+        
+                
+        
+        
+            
+        })
+    })
+}
+
 module.exports={
     add_new:add_new,
     access_org:access_org,
     identity_check:identity_check,
     add_msgC:add_msgC,
     resume:add_resume,
-    access_candidate:access_candidate
+    access_candidate:access_candidate,
+    interviews_all:interviews_all
+
 
 
 }
