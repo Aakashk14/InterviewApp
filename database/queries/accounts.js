@@ -10,16 +10,8 @@ const fs = require('fs');
 function create(email,password,level,firstlogin,name){
 return new Promise(resolve=>{
 return seqid().then((id)=>{
-    fs.mkdir(`./Storage/users/${id}`,{recursive:true},(err)=>{
-        if(err) console.log("got error",err)
-    })
-
-    admins.find({email:email}).then((res)=>{
-        if(res.length >0){
-            return 0;
-
-        }
-    })
+   
+   
        let tn = new admins(
         {
             email:email,
@@ -31,8 +23,18 @@ return seqid().then((id)=>{
 
         }
        )
-       tn.save()
-       resolve(1);
+       tn.save((err)=>{
+          if(err){
+              resolve(0)
+          }else{
+            fs.mkdir(`./Storage/users/${id}`,{recursive:true},(err)=>{
+                if(err) console.log("got error",err)
+            })
+            resolve(1)
+          }
+       })
+      
+       
     
     }
 )
