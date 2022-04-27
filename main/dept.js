@@ -2,19 +2,29 @@ const express = require('express');
 const {department_add,fetch_department, department_setup} = require("../database/queries/dept");
 const emp = require('../database/queries/employers/departments')
 const router=express.Router();
+const fs = require('fs');
+const {token_check} = require("./fn")
 
 
-router.post("/department/add",async(req,res)=>{
-if(req.body.value.length==0){
+
+router.post("/department/add",token_check,async(req,res)=>{
+if(req.body.data.length==0){
     res.redirect("/error")
 }else{
-await department_add(req.session.userid,req.body.value).then((result)=>{
-    res.send(result==1?req.body.value:"ERROR")
+await department_add(req.session.userid,req.body.data).then((result)=>{
+    res.send(result==1?req.body.data:"ERROR")
+    if(result==1){
+        fs.mkdir(`./Storage/Orgs/${req.session.org}/${req.body.data}`,(err)=>
+    {
+        if(err) console.log(err)
+    })
+    }
 })
 }
 })
 
 router.get("/department/:name",async(req,res,next)=>{
+
        if(!req.session.userid){
            res.redirect("/error")
        }else{
@@ -29,7 +39,7 @@ router.get("/department/:name",async(req,res,next)=>{
     }else{
    let result =  await fetch_department(req.session.org,req.params.name)
    result=result==0?1:result
-       res.render("department_home.ejs",{result:result})
+       res.render("department_home.ejs",{result:result,dept:req.params.name})
    }
 }
 )
@@ -43,7 +53,7 @@ router.get("/department/:name",async(req,res)=>{
         result=result==0?1:result
         req.session.dept=req.params.name
     
-        res.render("employer/dept.ejs",{result:result})
+        res.render("employer/dept.ejs",{result:result,dept:req.params.name})
      }else{
          res.redirect("/home")
      }

@@ -9,48 +9,90 @@ const multer = require('multer');
 const candidate = require('../database/queries/Candidate');
 const interview_db = require("../database/queries/interviews")
 const {access_control} = require("../database/queries/employers/departments")
-const {Identity_fn} = require("../main/fn")
+const {Identity_fn,chat_json} = require("../main/fn");
+const { fstat } = require('fs');
+const chats = require('../database/queries/chats');
+const { notDeepStrictEqual } = require('assert');
 
 
 
 
 const storage=multer.diskStorage({
     destination:function(req,file,cb){
-        let dr = `./Storage/Orgs/${req.session.org}`
+        let dr = `./Storage/Orgs/${req.session.org}/${req.params.dept}/`
         cb(null,dr)
     },
     filename:function(req,file,cb){
-        cb(null,file.originalname)
+        f_name=req.body.email+"_resume"+".pdf"
+        cb(null,f_name)
 
     }
 })
-const upload=multer({storage:storage})
-router.post("/candidates/new/:dept/",upload.single("resume"),async(req,res,next)=>{
-  if(req.session.level==0 && req.session.dept!=req.params.dept){
-      res.redirect("/home")
-  }else{
-
-    if(req.body.name.length==0 || req.body.email.indexOf("@")==-1){
-        res.send("ERROR")
+const upload=multer({storage:storage,
+fileFilter:async function(req,file,cb){
+    let ext = file.originalname.substring(file.originalname.lastIndexOf(".")+1,file.originalname.length)
+    if(ext=="pdf"){
+        data = await interview_db.c_dup(req.session.org,req.params.dept,req.body.email)
+            if(data==0){
+                return cb(new Error("duplicate"))
+            }else{
+                cb(null,true)
+            }
     }else{
+        return cb(new Error("goes wrong"))
+    }
+}}).single("resume")
+
+router.post("/candidates/new/:dept",(req,res,next)=>{
+    upload(req,res,function(err){
+        if(err){
+            res.send("error")
+            return
+        }else{
+            next()
+        }
+    })
+})
+router.post("/candidates/new/:dept/",async(req,res,next)=>{
+if(!req.file){
+   data = await interview_db.c_dup(req.session.org,req.params.dept,req.body.email)
+
+
+   if(data==0){
+       res.send("error")
+
+   }else{
+       next()
+   }
+}else{
+    next()
+}
+})
+router.post("/candidates/new/:dept/",async(req,res)=>{
+//    }else if(req.session.level==0 && req.session.dept!=req.params.dept){
+//       res.redirect("/home")
+//   }
+  
+// }else{
     Identity_fn(req.session.org).then(async(id)=>{
         filename=req.file?req.file.originalname:"";
-    
-     interview_db.add_new(req.session.org,req.params.dept,req.body.name,req.body.email,req.body.applied_for,id,filename).then(()=>{
-         res.send("DONE")
-     })
+        interview_db.add_new(req.session.org,req.params.dept,req.body.name,req.body.email,req.body.applied_for,id,filename).then((data)=>{
+            res.send(data==1?"done":"error")
+        })
+     chat_json(req.session.org,req.params.dept,req.body.email,id)
+     
 
 
     })
-    }
-}
 })
-
 router.get("/candidates/message/:dept/",async(req,res)=>{
 //function add_msgC(orgid,deptname,candidate_N,message){
 
-await interview_db.add_msgC(req.query.user,req.query.msg)
+await interview_db.add_msgC(req.query.user,req.query.msg).then(()=>{
+chats.insert_chat_a(req.session.org,req.query.user,req.query.msg,true)
+
 res.sendStatus(200)
+})
 })
 
 
@@ -92,9 +134,7 @@ res.send("done")
 
 })
 ///candidates/${dept}/comment
-router.get("/candidates/comments/:dept",(req,res)=>{
-    console.log(req.query)
-})
+
 
 router.get("/interviews/export",async(req,res,next)=>{
     if(req.session.level==0){

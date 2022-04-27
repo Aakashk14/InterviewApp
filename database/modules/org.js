@@ -13,7 +13,11 @@ const departments_schema=Schema({
         type:Schema.Types.ObjectId,
         ref:'interviews'
     }
-    ]
+    ],
+    chats:[{
+        type:Schema.Types.ObjectId,
+        ref:'chats'
+    }]
 })
 const orgs_schema=Schema({
     Name:String,
@@ -23,6 +27,23 @@ const orgs_schema=Schema({
     })
 
 const org = mongoose.model("orgs",orgs_schema)
+org.aggregate([{
+    $match:{org_id:1}},
+    {$unwind:{path:"$departments"}},{
+        $match:{"departments.Name":"Science"}},{$lookup:{
+            from:"employers",
+            let:{ids:"$departments.Employers"},pipeline:[{
+                $match:{
+                    $expr:{
+                        $in:["$_id","$$ids"]
+                    }
+                }
+            }],
+            as:"results"
+        }},{$match:{"results.email":"al@gmail.com"}}
+    ]).then((res)=>{
+            console.log(res[0])
+        })
 
 
 module.exports=org

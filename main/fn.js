@@ -39,7 +39,9 @@ async function Identity_fn(){
     })
 
 }
-async function randpass(){
+
+function randpass(){
+    return new Promise((resolve=>{
     var string = "abcdefgh@ijklmnopqrstuvwxyz1234567890"
         var str="";
                       
@@ -47,13 +49,64 @@ async function randpass(){
                  var rand = (Math.random()*36).toString().split(".");
                  str = str + string[rand[0]];
         }
-        return str;
+        resolve(str);
     
+}))
+}
+
+
+
+
+function chat_json(orgid,depname,user,id){
+    fs.readFile(`./Storage/Orgs/${orgid}/${depname}/users.json`,(err)=>{
+        if(err){
+            var temp = {
+                "users":[
+                    {
+                    "Name":user,
+                    "Identity":id
+                    }
+                ]
+            }
+            temp = JSON.stringify(temp)
+            fs.writeFile(`./Storage/Orgs/${orgid}/${depname}/users.json`,temp,(err)=>{
+                if(err) {}
+            })
+
+        }else{
+            var temp = {
+                "Name":user,
+                "Identity":id
+            }
+            fs.readFile(`./Storage/Orgs/${orgid}/${depname}/users.json`,(err,data)=>{
+                if(err){}
+                var d = JSON.parse(data)
+
+                d['users'].push(temp);
+                d=JSON.stringify(d)
+                fs.writeFile(`./Storage/Orgs/${orgid}/${depname}/users.json`,d,(err)=>{
+                    if(err) console.log(err)
+                })
+
+            })
+        }
+    })
+   
+}
+const token_check= (req,res,next)=>{
+    if(req.session.token==req.body.token || req.session.token==req.query.token){
+        next()
+    }else{
+        res.send("Invalid")
     }
+
+}
 module.exports={
     seqid:seqid,
     orgid:orgid,
     Identity_fn:Identity_fn,
-    randpass:randpass
+    randpass:randpass,
+    chat_json:chat_json,
+    token_check:token_check
 }
    

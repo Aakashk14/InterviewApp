@@ -6,12 +6,16 @@ const admin_schema = new mongoose.Schema({
     password:String,
     userid:Number,
     level:Boolean,  //0- admin, 1- emp
-    firstlogin:Boolean
+    firstlogin:Boolean,
+    
 })
 
 
 const admins = mongoose.model("admins",admin_schema)
 
-
-
+admins.find({
+    email:"setrr@gmail.com"
+}).then((res)=>{
+    console.log(res)
+})
 module.exports=admins;
