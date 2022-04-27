@@ -10,15 +10,14 @@
 
 
 <script>
-    function me(){
-        Swal.fire("Aakash <br>Backend Engineer with Average Frontnend.<br>Expertise in Product Security")
-    }
+  
     $(()=>{
-        $(".header").load("/static/header.html")
+      
         $("#export").on("click",function(){
 
+    
+
 $.get("/interviews/export",function(response){
-    console.log("whats response",response)
 
     if(response.status=="error"){
         alert("No Interviews to download")
@@ -43,7 +42,7 @@ $("#del_org").on("click",(req,res)=>{
     $.get("/Org/delete",function(response){
         console.log(response)
         if(response){
-            location.reload()
+           location.href="/home"
         }else{
             alert("No Permission")
             $(".overlays").removeAttr("style")
@@ -68,11 +67,12 @@ $("#del_org").on("click",(req,res)=>{
             }).then((value)=>{
                 let data={}
                 data.value= value.value[0].toUpperCase()+value.value.substring(1);
+                token=$("#token").val()
               
                 $.ajax({
                     type:"POST",
                     url:"/department/add",
-                    data:data,
+                    data:{data:data.value,token:token},
                     success:function(response){
                         if(response=="ERROR"){
                             Swal.fire("Department Name invalid or already exist")
@@ -93,17 +93,25 @@ $("#del_org").on("click",(req,res)=>{
 </style>
     <body>
         <div class="header">
+            <p onclick="location.href='/home'" >Home</p>
+            <p id="control" onclick="location.href='/org/settings'">Settings</p>
+            <p onclick="location.href='/logout'">Logout</p>
+            <p id="Org"><%=result[0].Name %></p>
+
            
         </div>
+        
         
         <div class="update">
            <!-- <a href="/qupdate">Need A quick Update Report?</a>-->
             <input type="button" value="Add Department" id="dept_btn">
+            <input type="hidden" value="<%=token%>" id="token">
         </div>
         <% if(level==1){ %>
             <div class="sidebar">
                 <input type="button" id="export" value="Interviews Reports">
                <input type="button" id="del_org" value="Delete Organization">
+               <input type="button" id="live_chat" onclick="location.href='/chat'" value="Live Chat">
             </div>
         <% } %>
         

@@ -1,0 +1,61 @@
+<html>
+    <link rel="stylesheet" href="/static/header.css">
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<style>
+    .box{
+        position: relative;
+        top:50px;
+
+    }
+    .container{
+        width: 500px;
+    }
+    .btn{
+        position: relative;
+        top:100px;
+        width: 100px;
+    }
+</style>
+<script>
+    $(()=>{
+    $(".btn").on('click',()=>{
+       let dept = $(".box select").val()
+        location.href=`/chat/department/${dept}`
+        console.log(dept)
+
+    })
+})
+
+</script>
+<body>
+   
+        <div class="header">
+            <p onclick="location.href='/home'" >Home</p>
+            <p id="control" onclick="location.href='/org/settings'">Settings</p>
+            <p onclick="location.href='/logout'">Logout</p>
+            
+       
+    </div>
+    <div class="box container">
+        <% if(result.length>0){ %>
+
+        <select id="department" class="form-select" aria-label="Default select example">
+            <% for(x of result){ %>
+               <option value="<%=x.Name %>"><%=x.Name %></option>
+
+            <%}%>
+          </select>
+     
+          <button class="btn btn-primary">Go</button>
+          <%  }else{%>
+            <p>No One to chat</p>
+          <%} %>
+    </div>
+
+

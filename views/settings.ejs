@@ -7,36 +7,191 @@
     src="https://code.jquery.com/jquery-3.3.1.js"
     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous"></script>
-    <script src="/header.js"></script>
 
 <Script>
     
     $(()=>{
-        $(".header").load("/header.html")
+        $(".header").load("/static/header.html")
         $(".container :button").on("click",function(){
+            
+
             let id = $(this).attr('id')
 
             src=`/${id}/settings`
-            var frame = $('#frm')[0];
-            frame.contentWindow.location.replace(src)
-            //$("#frm").attr("src",src)       
+            if(id=="emp"){
+                $("#frm").remove()
 
+                $(".opn_users").show()
+                
+
+
+            }else if(document.getElementById("frm")){
+                document.getElementById("frm").src=src
+            }else{
+            console.log("else part",id)
+            let frame = document.createElement("iframe");
+            frame.id="frm";
+            frame.src=src;
+            frame.setAttribute("frameBorder",0)
+            $(".opn_users").hide()
+
+
+            document.getElementsByClassName("main")[0].insertBefore(frame,document.getElementsByClassName("opn_users")[0])
+            
+          //  frame.contentWindow.location.replace(src)
+            //$("#frm").attr("src",src)       
+            }
         })
+        $(()=>{
+            $("#btn_cancel").on("click",()=>{
+                $(".add").hide()
+            })
+            $("#emp_ad").on("click",()=>{
+            if($(".add")[0]){
+              if($(".add").css("display")=="none"){
+                $(".add").show()
+              }else{
+                  $(".add").hide()
+              }
+            }else{
+                alert("Add a department first")
+            }
+      
+       
+    })
+    $("#submit1").on("click",()=>{
+        $("#submit1").attr("disabled","true");
+        $("#emp_add").attr("disabled","true")
+        
+        dept = $("select#select_dep").val()
+        email=$("#email_emp").val()
+        token=$("#token").val()
+
+
+        $.get(`/emp/add?department=${dept}&email=${email}&token=${token}`,function(response){
+            if(response!="ERROR"){
+                
+        location.reload()
+
+            }else{
+                alert("something went wrong")
+            }
+        })
+        
+    })
+    $("#filter_department").on("change",function(){
+        if($(this).val()!="default"){
+            
+        filter = $(this).val()
+
+        $("#tb_main tr:has(td)").each(function(){
+            if($(this).children()[3].innerHTML!=filter){
+                $(this).attr("class","hide")
+            }else{
+                $(this).removeClass("hide")
+            
+            }
+        })
+      
+        }else{
+            $("tr").removeClass("hide")
+        }
+    })
+})
     })
 </Script>
     <body>
-        
         <div class="header">
             
         </div>
         <div class="main">
-            
-            <iframe id="frm" frameBorder="0" src="/emp/settings"></iframe>
 
+            <div class="opn_users">
+                <% if(emp!=0) { %>
+                    <% if( emp[0].departments.length >0){ %>
+                <div class="add" style="display: none;">
+                    <form id="new_c">
+            
+            
+                        <select id="select_dep">
+                        <% for(let i=0;i<emp[0].departments.length;i++){ %>
+                                <option value="<%=emp[0].departments[i].Name %>"><%=emp[0].departments[i].Name %></option>
+                        <% } %>
+                            </select>
+                        <input type="text" id="email_emp" placeholder="Email" required>
+                        <input type="hidden" id="token" name="token" value="<%=token%>">
+                        <input type="submit" id="submit1" value="Add">
+                        <input type="button" id="btn_cancel" value="Cancel">
+            
+                    </form>
+                    </div>
+                    <% } %>
+                <% }%>
+           
+                <div class="main_emp">
+                   
+            <input type="button" value="Add Employers"  id="emp_ad">
+            
+                <p id="note" style="display: none;">Add Some Employers</p>
+                
+            <select id="filter_department"name="departments">
+                <option value="default">All departments</option>
+        
+               <%if(emp!=0) {%>
+                <% if(emp[0].departments.length>0) {%>
+                    <% for(let i=0;i<emp[0].departments.length;i++) {%>
+                    <option value="<%=emp[0].departments[i].Name %>"><%=emp[0].departments[i].Name %></option>
+                    <% } %>
+                <% }%>
+                    <%}%>
+        
+            </select>
+            <div class="list">
+            
+               <table id="tb_main">
+                
+                   <tr>
+                   <th>Name</th>
+                   <th>Email</th>
+                   <th>Status</th>
+                   <th>Department</th>
+                   <th>One Time Password</th>
+                   </tr>
+               <% if(emp!=0){ %>
+                <% for(let k=0;k<emp[0].departments.length;k++) {%>
+                   <% for(let i=0;i<emp[0].departments[k].Employers.length;i++){ %>
+                       <tr>
+                       <td>____</td>
+                       <td><%= emp[0].departments[k].Employers[i].email %> </td>
+                       <% if(emp[0].departments[k].Employers[i].Status==false){ %>
+                       <td>Inactive</td>
+               <%}else{ %>
+                <td>Active</td>
+               <%} %>
+                    <td id="d_belong"><%= emp[0].departments[k].Name %></td>  
+                   <td><%= emp[0].departments[k].Employers[i].otp %> </td>
+                          </tr>
+                       
+                   <% } %>
+                   <% } %>
+                   <%}%>
+                   
+                   </table>
+        
+                   
+            </div>
+        
+       
+            </div>
+        </div>
+
+            
+</div>
         <div class="panel">
+
         <div class="container">
          <input type="button"  id="emp" value="Employers Settings">
-         <input type="button" id="profile" value="My Profile">
+         <input type="button" id="profile"  value="My Profile">
         <!-- <input type="button"  id="interview" value="Total Interviews"> -->
          <input type="button"id="departments" value="Departments">
          </div>

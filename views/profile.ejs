@@ -37,11 +37,14 @@
     </script>
     <body>
         <div class="profile">
+<p>Allowing Password change directly because No email functions</p>
 <div class="abt">
     <form method="POST" action="/profile/update">
     <input type="text" name="name" value="<%=result[0].Name %>">
-    <input type="text" name="email " value="<%=result[0].email %>">
-    <input type="password" name="password" value="" placeholder="password">
+    <input type="text" name="email" value="<%=result[0].email %>">
+    <input type="password" name="password" value="<%=result[0].password %>" placeholder="password">
+    
+    <input type="hidden" name="token" value="<%=token%>">
     <input type="submit" value="Update">
     </form>
     </div>

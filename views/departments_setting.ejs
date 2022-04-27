@@ -5,7 +5,13 @@
     src="https://code.jquery.com/jquery-3.3.1.js"
     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous"></script>
+    
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <style>
+        body{
+            overflow: hidden;
+        }
         .container{
     position: absolute;
     left:200px;
@@ -30,19 +36,65 @@ td{
 th,td{
     margin: 16px;
 }
+.loading{
+    z-index: 2;
+    position: absolute;
+    opacity: 0.6;
+    width: 1000px;
+    right:130px;
+    
+}
 
     </style>
     <script>
         $(()=>{
-            $(".main").load("/header.html")
+            $(".container button").on("click",function(){
+                dep = $(this).attr('id')
+
+                Swal.fire({
+  title: 'Are you sure?',
+  text: "All Data will be lost , Interviews & Employers included",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Yes, delete it!'
+}).then((result) => {
+  if (result.isConfirmed) {
+      token=$("#token").val()
+      $(".loading").show()
+
+                $.ajax({
+                    url:'/settings/departments/delete',
+                    method:"post",
+                    data:{department:dep,token:token},
+                    success:function(response){
+                        $(".loading").hide()
+                        
+                        Swal.fire(
+      'Deleted!'
+                        )
+                        $(`#${dep}`).remove()
+
+                    }
+                })
+            }
         })
+    })
+})
     </script>
     <body>
         <div class="header">
+        
            
         </div>
-        
+
+
         <div class="container">
+            <input type="hidden" id="token" value="<%=token%>">
+            <div class="loading" style="display: none;">
+                <img src="/static/spinner.gif" width="600px">
+            </div>
             <% if(result!=0) { %>
 
             <table>
@@ -52,14 +104,19 @@ th,td{
                     <th>Action</th>
                </tr>
                <% for(let i=0;i<result.length;i++){ %>
-                   <tr>
+                   <tr id="<%=result[i].Name %>">
                        <td><%= result[i].Name %></td>
                        <td><%= result[i].count %></td>
+                       <td><button type="button" class="btn btn-sm btn-danger"id="<%=result[i].Name %>">Delete</td>
                        <%} %>
                      <% } %>
+
             
                    </tr>
             </table>
+            <% if(result==0){ %>
+                <p>Nothing to display</p>
+            <%}%>
 
             </div>
     </body>

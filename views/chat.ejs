@@ -1,0 +1,458 @@
+<html>
+    <link rel="stylesheet" href="/static/header.css">
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<STYLE>
+    .chat{
+        height: 500px;
+        width: 900px;
+        position: relative;
+        top:30px;
+    }
+    .main{
+        width: 160px;
+        position: relative;
+        right:374px;
+        height: 500px;
+    }
+    .search{
+        position: relative;
+        right:8px;
+        width: 160px;
+        height: 45px;
+    }
+    .search input{
+        width: 158px;
+        height: 40px;
+    }
+    .temp{
+        background-color: white;
+        width: 144px;
+        position: relative;
+        left:8px;
+        border-radius: 4px;
+        word-wrap: break-word;
+        
+    }
+    .temp p{
+        border: 1px solid;
+        margin: 0;
+        cursor: pointer;
+
+    }
+    .temp p:hover{
+        background-color: red;
+    }
+    #invisible{
+        opacity:0.5;
+    }
+    .list{
+        height: 460px;
+        position: relative;
+        bottom:5px;
+        right:8px;
+        width: 158px;
+        background-color: rgb(22, 93, 163);
+    }
+    .list div{
+        height: 50px;
+        cursor: pointer;
+        background-color: rgb(19, 178, 138);
+        margin: 4px;
+        padding: 0px;
+        display: block;
+        word-wrap: break-word;
+
+
+    }
+    .list div[active=true]{
+        background-color: red;
+        height: 70px;
+        word-wrap: break-word;
+    }
+    .chats{
+        width: 740px;
+        position: absolute;
+        right:0px;
+        overflow: auto;
+    
+        height: 400px;
+    }
+    .msg_to{
+       background-color: red;
+    }
+    textarea{
+        position: relative;
+        
+    }
+   /* textarea{
+       resize: none;
+       position: relative;
+       left:500px;
+   } */
+   .msg_to button{
+       position: relative;
+       bottom:104px;
+       width: 207px;
+       left:537px;
+       height: 105px;
+       z-index: 2;
+   }
+  textarea{
+      resize: none;
+  }
+  #you p{
+      position: relative;
+      left:550px;
+      min-width: 50px;
+      background-color: rgb(158, 151, 151);
+      max-width: 130px;
+      word-wrap: break-word;
+      border-radius: 4px;
+      min-height: 40px;
+      margin: 4px;
+  }
+  .msg_to{
+      width: 744px;
+      position: absolute;
+      right:0px;
+      bottom:0px;
+      height: 102px;
+  }
+
+
+  #from p{
+      width: 200px;
+      background-color: rgb(53, 94, 121);
+      min-width: 50px;
+      max-width: 130px;
+      word-wrap: break-word;
+      border-radius: 4px;
+      min-height: 40px;
+      margin: 4px;
+      color: white;
+  }
+  .temp{
+      z-index: 2;
+  }
+
+  .sidebar{
+    width: 200px;
+    position: absolute;
+    height: 200px;
+    top:100px;
+}
+.sidebar input{
+    margin: 1px;
+    width: 160px;
+    height: 40px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: rgb(156, 105, 10);
+    margin-top: 10px;
+    font-family:lato;
+}
+.sidebar input:hover{
+    height:50px;
+    cursor: pointer;
+}
+#upload{
+    position: relative;
+    bottom:15px;
+    cursor: pointer;
+    left:100px;
+}
+.msg_to button{
+       position: absolute;
+       bottom:1px;
+       width:100px;
+       right:2px;
+       height: 105px;
+       z-index: 2;
+   }
+   
+</STYLE>
+<script>
+   
+
+                
+    $(()=>{
+        dept= location.href.split("/")
+        dept=dept[dept.length-1]
+        $(".sidebar input[type=button]").val(dept+" "+"Chat")
+
+        const socket = io()
+
+socket.on("message",(data)=>{
+
+    $(".list div").each(function(){
+        if($(this).attr('id')==data.user ){
+
+            if($(this).attr("active","true")){
+                let el = document.createElement("div");
+                el.id="from";
+                let p = document.createElement("p")
+                p.innerText=data.message;
+
+                el.append(p);
+                document.getElementsByClassName("chats")[0].append(el)
+
+            }
+            return;
+        }
+    })
+})
+
+    var users;
+        var dept = location.href.split("/")
+        dept=dept[dept.length-1]
+        
+       
+        $.get(`/api/chat/users.json?dept=${dept}`,function(response){
+                if(response!="error"){
+                users=response
+                }
+            })
+       
+
+            
+
+   
+   
+        $("#search").on('input',()=>{
+            $(".temp").show()
+            
+            let val = new RegExp("^"+$("#search").val());
+            
+            
+$(".temp").empty()
+if(!users){
+                let p =document.createElement("p");
+                    p.innerText="No Candidate found"
+                    p.id="invisible"
+                    $(".temp").append(p)
+                    return;
+            
+}
+            users.users.map(x=>{
+                
+                if(val.test(x.Name)){
+                    let p =document.createElement("p");
+                    p.innerText=x.Name
+                    p.id=x.Identity
+                    $(".temp").append(p);
+                }
+            })
+            if($(".temp").children().length==0){
+                let p =document.createElement("p");
+                    p.innerText="No Candidate found"
+                    p.id="invisible"
+                    $(".temp").append(p)
+            }
+          
+            let dept = location.href.split("/")
+            dept=dept[dept.length-1]
+
+            
+
+
+        })
+$("#upload").on("click",()=>{
+    $("#file").click()
+})
+$("#file").on("change",function(){
+    let data = document.getElementById("file").files[0]
+    const reader =new FileReader()
+    reader.onload = (e)=>{
+        data=reader.result
+    
+}
+socket.emit("file",reader.readAsDataURL(data));
+
+})
+
+$(".temp").on("click",function(){
+    already=0;
+
+    let el = document.createElement("div");
+
+
+
+   
+   el.className="user row border"
+   el.innerText=$(this).children()[0].innerHTML;
+   el.id=$(this).children().first().attr('id')
+   if(el.id=="invisible"){
+       $(".temp").empty()
+       return;
+   }
+//<div id="user1" class="user row border">
+    $(".list div").each(function(){
+        $(this).attr("active","false")
+    })
+    $(".list div").each(function(){
+    if($(this).attr('id')==el.id){
+            $(this).attr('active',"true")
+            $(".msg_to").show()
+            already=1;
+            return false;
+
+        }
+    })
+   
+    
+if(already==1){
+    $(".temp").hide()
+    return
+}
+   el.setAttribute("active","true")
+   $(".temp").hide()
+   $(".temp").empty()
+
+   $(".list").prepend(el)
+   $(".msg_to button").attr('id',el.id)
+   $(this).attr("active","true")
+   $(".msg_to").show()
+
+
+
+
+})
+$(".list div").on('click',function(){
+    if($(this).attr('active')=="true"){
+        return
+    }
+
+    $(".list div").each(function(){
+        $(this).attr("active","false")
+    })
+    $(this).attr("active","true")
+    $(".msg_to button").attr('id',$(this).attr('id'))
+    $(".chats").empty()
+
+    $(".msg_to").show()
+    
+
+
+
+    $.get(`/api/chat/fetch?to=${$(this).attr('id')}`,function(response){
+        if(response!=0){
+            for(x of response){
+                let el=document.createElement("div");
+                let p =document.createElement("p")
+                p.innerText=x.text;
+                el.append(p)
+
+                if(x.turn==true){
+                    el.id="you"
+
+                }else{
+                    el.id="from"
+                }
+                $(".chats").append(el)
+            }
+            $('.chats')[0].scrollTop = $('.chats')[0].scrollHeight
+
+
+        }
+
+    })
+})
+$(".msg_to button").on('click',function(){
+
+
+    dept = location.href.split("/")
+    dept = dept[dept.length-1]
+    msg=$("#_data").val()
+    socket.emit("message",{msg:msg,user:$(this).attr('id')})
+    if(msg.length==0){
+        return
+    }
+    $("#_data").val('')
+    let el=document.createElement("div");
+    el.id="you"
+                let p =document.createElement("p")
+                p.innerText=msg;
+                el.append(p)
+                $(".chats").append(el)
+                $('.chats')[0].scrollTop = $('.chats')[0].scrollHeight
+
+    $.get(`/api/chat/send?msg=${msg}&to=${$(this).attr('id')}`);
+})
+    })
+    </script>
+    <body>
+        <div class="header">
+            <p onclick="location.href='/home'" >Home</p>
+            <p id="control" onclick="location.href='/org/settings'">Settings</p>
+            <p onclick="location.href='/logout'">Logout</p>
+            
+        </div>
+        <div class="sidebar">
+            <input type="button" id="live_chat" value="Live Chat">
+         </div>
+        <div class="chat container border">
+            <div class="msg_to" style="display: none;">
+              <textarea cols="70" id="_data" rows="4"></textarea>
+              <button id="abcde" class="btn btn-sm btn-primary">Send</button>
+              <input type="file" id="file" style="display:none">
+
+              <img src="/static/upload.png" id="upload" width="40px" height="30px">
+
+            </div>
+        
+            <div class="chats">
+            <!-- <div id="from">
+                <p>aaaa</p>
+            </div>
+            <div id="from">
+                <p>aaaa</p>
+            </div>b
+            <div id="you">
+                <p>aaaa</p>
+            </div>
+            <div id="from">
+                <p>aaaa</p>
+            </div>
+            <div id="you">
+                <p>aaaa</p>
+            </div>
+          -->
+
+            </div>
+
+            <div class="main box container">
+                <div class="search">
+                  
+                  <input type="text"  id="search" placeholder="Enter name">
+                
+                  <div class="temp" style="display: none;">
+                    
+                  </div>
+                </div>
+                <div class="list container border">
+                    <% if(users!=0){ %>
+                    <% for(x of users) {%>
+                        <div id="<%=x.results.Identity %>" class="user row border">
+                            <%=x.results.email %>
+                            </div>
+                        <%}%>
+                    <%}%>
+                        </div>
+                 
+              
+
+            </div>
+            
+            
+        </div>
+        </div>
+    </body>
+</html>

@@ -60,7 +60,10 @@
 </style>
 <script>
     $(()=>{
-        $(".header").load("/static/header.html")
+        dept= location.href.split("/")
+        dept=dept[dept.length-1]
+        $(".sidebar input[type=button]").attr("onclick",`location.href='/chat/department/${dept}'`)
+
 
         $("#add_c").on("click",()=>{
             alert("clicked")
@@ -110,11 +113,17 @@
                 processData:false,
                 contentType:false,
                 success:function(response){
-                    if(response!="ERROR"){
+                    if(response!="error"){
                     $(".frm").hide()
                     location.reload()
                     }else{
+                        $(".frm").hide()
                         alert("Something went wrong")
+                        $("#submit1").attr("disabled",false)
+                        $("#name").val('');
+                        $("#email").val('')
+                        $("#applied_for").val('')
+
                     }
 
                 }
@@ -130,17 +139,27 @@
             $(".msg #link").remove()
         })
         $("#send").on('click',function(){
+           
+
+
         
             dept=document.cookie.split(";")
         dept=dept[dept.length-1].split("=")[1]
         msg=$("#msg_").val();
+        user=$("#btn1").attr('name')
         if(msg.length==0){
             alert("Enter something")
             return
         }
         user=$("#send").attr('name')
           $.get(`/candidates/message/${dept}?user=${user}&msg=${msg}`,function(){
-              $(".msg").hide()
+              $("#msg_success").show()
+              setTimeout(function(){
+                  $("#msg_success").hide()
+              },1000)
+             
+
+             
           })
             
  
@@ -148,14 +167,20 @@
         })
         $(".table button").on("click",function(){
             let id= $(this).attr('id')
+            let org = document.cookie.split(";")
+            org=org[org.length-1].split("=")[1]
+            if(isNaN(org)){
+             org = document.cookie.split(";")
+            org=org[org.length-2].split("=")[1]
+            }
             
             
             
 
-
-            t=`${location.host}/pvt/${id}`
+           
+            t=`${location.host}/pvt/${org}/${id}`
             document.getElementById("url").innerHTML=t;
-            $("#send").attr("name",$(this).attr('name'))
+            $("#send").attr("name",id)
             
         
 
@@ -221,10 +246,16 @@
 </script>
     <body>
 
-
         <div class="header">
+            <p onclick="location.href='/home'" >Home</p>
+            <p id="control" onclick="location.href='/org/settings'">Settings</p>
+            <p onclick="location.href='/logout'">Logout</p>
             
         </div>
+        <div class="sidebar">
+           <input type="button" id="live_chat" onclick="location.href='/chat'" value="Live Chat">
+        </div>
+        
         <!-- Button trigger modal -->
 
   
@@ -244,7 +275,6 @@
             <div class="candidate_url">
             <h6>Private Link For candidate to see messages,status</h6>
             <div id="url" class="url container border">
-                aaaaaaaaaaaa
                
             </div>
             </div>
@@ -252,6 +282,7 @@
             <h6>Send Message to Candidate</h6>
             <textarea id="msg_" rows="5" cols="40" placeholder="Enter Message" required></textarea>
             <button type="button" id="send" class="btn btn-primary">Send</button>
+            <h6 id="msg_success" style="display:none;background-color: aqua; opacity: 0.6;">Messaage Sent</h6>
              </div>
              </div>
         </div>
@@ -300,28 +331,40 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
+                <th scope="col">Email</th>
                 <th scope="col">Applied_for</th>
                 <th scope="col">Resume</th>
                 <th scope="col">Message</th>
+                <th scope="col">Status</th>
               </tr>
             </thead>
             <tbody>
                 <%   for(let i=0;i<result.length;i++) { %>
               <tr>
-                <th scope="row"><input type="checkbox" id="<%= result[i].Identity %>"></th>
+                <th scope="row"><input type="checkbox" id="<%= result[i].Identity %>">   <%=i %></th>
                 <td class="name" id="<%=i%>"><%= result[i].Name %></td>
+                <td class="name" id="<%=i%>"><%= result[i].email %></td>
+
                 <td><%= result[i].Applied_for %> </td>
                 <% if(result[i].Resume.length >0) {%>
 
-                <td><a href='/candidates/resume/<%=result[i].Resume %>' target="_blank">Resume</a></td>
+                <td><a href='/candidates/<%=dept %>/resume/<%=result[i].email%>/resume.pdf' target="_blank">Resume</a></td>
                 <% }else{ %>
                     <td>No Resume</td>
                 <% } %>
                 <td><button id="<%=result[i].Identity %>" type="button" name="<%=result[i].Name %>" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"> Add Message</button></td>
+                <td><select key = "<%=result[i].Identity %>"id="select_status" name="select_status">
+                    <option value="<%= result[i].Status %>"><%= result[i].Status %></option> 
+                    <% if(result[i].Status=="Completed") { %>
+                    <option value="Pending">Pending</option>
+                    <% }else{ %>
+                      <option value="Completed">Completed</option>
+                    <%} %>
+                    </select>
+                  </td>
 
+              
 
-
-                
               </tr>
             <% } %>
            
