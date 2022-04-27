@@ -5,9 +5,9 @@ const employer = require("../modules/employers")
 const mongoose=require('mongoose')
 
 
-function add(orgid,depname,email_E){
+async function add(orgid,depname,email_E){
     var id = new mongoose.Types.ObjectId();
-return randpass().then((otp)=>{
+let otp = await randpass()
     return new Promise(resolve=>{
         employer.create({
             _id:id,
@@ -24,15 +24,16 @@ create(email_E,otp,0,true)
 resolve()
 
         
-})})}
+})}
 
 function fetch_ALLemp(orgid){
     return new Promise(resolve=>{
         
            org.find({
             org_id:orgid,
-            }).populate({
+            },'departments').populate({
               path:'departments.Employers'}).then((res)=>{
+                
                   if(res.length >0){
                       resolve(res)
                   }else{
@@ -50,6 +51,8 @@ function change_Status(employer_E){
 
 
 }
+
+
 
 module.exports={
     add_emp:add,

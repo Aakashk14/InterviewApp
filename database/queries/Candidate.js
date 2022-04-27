@@ -1,5 +1,6 @@
 const candidate= require("../modules/interview")
 const orgs = require("../modules/org")
+const fs = require('fs')
 
 
 function candidate_page(identity){
@@ -31,7 +32,11 @@ function delete_candidate(candidate_identity,org_id,department){
 
         candidate.find({
             Identity:candidate_identity
-        },'_id').then((res)=>{
+        },'email _id').then((res)=>{
+            fs.unlink(`./Storage/Orgs/${org_id}/${department}/${res[0].email+"_resume.pdf"}`,(err)=>{
+                if(err) console.log(err)
+            })
+
             orgs.findOneAndUpdate({
                 org_id:org_id,
                 'departments.Name':department
@@ -48,8 +53,36 @@ function delete_candidate(candidate_identity,org_id,department){
 }
 
 
+function user_search(orgid,user){
+
+user="^"+user
+return new Promise(resolve=>{
+orgs.aggregate([{
+    $match:{org_id:orgid}
+},{$unwind:{path:"$departments"}}
+,{
+    $lookup:{
+        "from":"interviews",
+        let:{users:"$departments.Interviews"},pipeline:[{
+            $match:{
+                $expr:{
+                    $in:["$_id","$$users"]
+                }
+            }
+        }],
+        "as":"results"
+}},{$unwind:{path:"$results"}},{$match:{'results.Name':{'$regex':new RegExp(user)}}},{$project:{
+    data:"$results"
+}}
+]).then((res)=>{
+    resolve(res.length>0?resolve(res):0)
+})
+})
+}
+
 module.exports={
     candidate_page:candidate_page,
     change_status:change_status,
-    delete_candidate:delete_candidate
+    delete_candidate:delete_candidate,
+    user_search:user_search
 }

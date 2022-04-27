@@ -3,6 +3,7 @@ const departments_details = require('../modules/interview')
 const org = require('../modules/org')
 
 
+
 function department_add(email,name){
     
 return new Promise(resolve=>{
@@ -78,6 +79,8 @@ function all_departments(email,orgid){
         })
     })
 }
+
+
 
 module.exports={
     department_add:department_add,
