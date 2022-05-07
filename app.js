@@ -11,10 +11,6 @@ const {createServer} = require('http')
 const httpserver = createServer(app)
 const io = new Server(httpserver,{})
 
-// var config = JSON.parse(process.env.APP_CONFIG);
-// var mongoPassword = 'aakash14';
-// mongoose.connect("mongodb://"+config.mongo.user+":"+encodeURIComponent(mongoPassword)+"@"+config.mongo.hostString,{autoIndex:true})
-// const cors = require('cors')
 
 global.xsession= session({
 resave:false,
