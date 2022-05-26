@@ -20,7 +20,7 @@ router.get("/signup",(req,res)=>{
     res.render("signup.ejs")
 })
 router.post("/signup",async(req,res)=>{
-
+// For production hashing password is the best way since it prevent leaking user password in case your app get hacked for demo purpose I didnt use hashing
 if(req.body.email.length==0 || req.body.password.length==0 || req.body.email.indexOf("@")==-1 || req.body.name.length==0){
     res.redirect("/error")
 }else{
