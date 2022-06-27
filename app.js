@@ -6,16 +6,21 @@ const {Server} = require('socket.io')
 const cookieparser = require('cookie-parser')
 console.log(process.env.a)
 mongoose.connect('mongodb://localhost:27017/interview',{autoIndex:true})
+const MongoStore = require('connect-mongo')(session);
+
 const {createServer} = require('http')
 
 const httpserver = createServer(app)
 const io = new Server(httpserver,{})
 
 
-global.xsession= session({
-resave:false,
-saveUninitialized:false,
-secret:"abcde123"
+global.x_session = new session({
+    saveUninitialized:false,
+    resave:false,
+    secret:"abcdef123",
+    store: new MongoStore({
+        url: "mongodb://localhost:27017/interview"
+    })
 })
 require("./sockets/socket_config")(io)
 app.use(cookieparser())
