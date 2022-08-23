@@ -26,9 +26,11 @@ require("./sockets/socket_config")(io)
 app.use(cookieparser())
 
 app.use(xsession)
+
+//  headers in case running frontend on other host
 app.use(function(req, res, next) {
     
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "your_frontend");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
         res.header('Expires', '-1');
